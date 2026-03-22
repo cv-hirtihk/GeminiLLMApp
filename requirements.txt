@@ -1,0 +1,3 @@
+streamlit # Front-end
+google-genai # LLM
+python-dotenv # To load env variables
