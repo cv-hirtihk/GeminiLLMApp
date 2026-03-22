@@ -13,6 +13,9 @@ An interactive chat application that maintains conversation history. It uses Str
 ### 3. Gemini Vision App (`vision.py`)
 A multimodal application utilizing Gemini's vision capabilities. Users can upload an image (JPG, JPEG, PNG) and provide an optional text prompt to ask questions about the image. The model analyzes both inputs and generates a detailed response.
 
+### 4. MultiLanguage Invoice Extractor (`invoiceExtractor.py`)
+An application built to extract and summarize information from invoices. Users can upload an image of an invoice and ask specific questions about it, using the Gemini model to analyze the document.
+
 ## Prerequisites
 
 Before running the applications, make sure you have Python 3.8 or above installed.
@@ -45,6 +48,11 @@ Before running the applications, make sure you have Python 3.8 or above installe
    To run the Chat App:
    ```bash
    streamlit run qachat.py
+   ```
+
+   To run the MultiLanguage Invoice Extractor:
+   ```bash
+   streamlit run invoiceExtractor.py
    ```
 
 ## Built With
