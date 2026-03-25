@@ -1,6 +1,6 @@
 # Gemini LLM Application
 
-This project is a collection of Streamlit applications built using the Google Generative AI API (`gemini-2.5-flash`). It demonstrates different capabilities of the Gemini models, including simple text-based Q&A, conversational chatbots with history, and image-based visual question answering.
+This project is a collection of Streamlit applications built using LangChain and Google's Generative AI (`gemini-2.5-flash`). It demonstrates different capabilities of the Gemini models, including simple text-based Q&A, conversational chatbots with history, multi-document PDF question answering, and image-based visual question answering.
 
 ## Applications Included
 
@@ -15,6 +15,9 @@ A multimodal application utilizing Gemini's vision capabilities. Users can uploa
 
 ### 4. MultiLanguage Invoice Extractor (`invoiceExtractor.py`)
 An application built to extract and summarize information from invoices. Users can upload an image of an invoice and ask specific questions about it, using the Gemini model to analyze the document.
+
+### 5. Multi-PDF Chat (`multipdfChat.py`)
+A RAG (Retrieval Augmented Generation) application that allows users to upload multiple PDF documents and ask questions about them. The application uses FAISS vector store to index the document chunks and retrieve the most relevant sections to answer user queries.
 
 ## Prerequisites
 
@@ -55,9 +58,27 @@ Before running the applications, make sure you have Python 3.8 or above installe
    streamlit run invoiceExtractor.py
    ```
 
-## Built With
+## LangChain](https://python.langchain.com/) - Framework for building applications with LLMs.
+* [langchain-google-genai](https://pypi.org/project/langchain-google-genai/) - LangChain integration for Google Generative AI.
+* [langchain-community](https://pypi.org/project/langchain-community/) - Community integrations for LangChain (includes FAISS vector store).
+* [FAISS](https://github.com/facebookresearch/faiss) - Vector database for semantic search and retrieval.
+* [PyPDF2](https://pypi.org/project/PyPDF2/) - For parsing and extracting text from PDF documents.
+* [python-dotenv](https://pypi.org/project/python-dotenv/) - For managing environment variables securely.
+* [Pillow (PIL)](https://python-pillow.org/) - For handling image inputs in the Vision and Invoice Extractor applications.
 
-* [Streamlit](https://streamlit.io/) - Front-end web framework for building internal tools.
+## Architecture Changes (v2.0)
+
+The application has been refactored to use **LangChain** as the core framework instead of the direct Google SDK:
+
+- **Previous**: Direct `google.generativeai` SDK usage
+- **Current**: LangChain's `ChatGoogleGenerativeAI` wrapper with `HumanMessage` for structured communication
+
+### Benefits of LangChain Integration:
+- **Consistency**: All files use the same abstraction layer for LLM interaction
+- **RAG Support**: Built-in support for retrieval-augmented generation (Multi-PDF Chat)
+- **Message Structure**: Proper message handling with `HumanMessage` and other message types
+- **Image Handling**: Base64 encoding for seamless image processing in vision tasks
+- **Vector Store Integration**: Easy integration with FAISS for semantic search
 * [Google Generative AI SDK](https://pypi.org/project/google-generativeai/) - For connecting to the Gemini LLM.
 * [python-dotenv](https://pypi.org/project/python-dotenv/) - For managing environment variables securely.
 * [Pillow (PIL)](https://python-pillow.org/) - For handling image inputs in the Vision application.

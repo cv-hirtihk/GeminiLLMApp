@@ -1,30 +1,34 @@
 from dotenv import load_dotenv
 load_dotenv()
 import streamlit as st
-import os
 from PIL import Image
-import google.generativeai as genai
+import base64
+from io import BytesIO
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage
 
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+model = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
-model = genai.GenerativeModel("gemini-2.5-flash")
+def pil_to_base64(pil_image):
+    """Convert PIL Image to base64 data URL"""
+    buffered = BytesIO()
+    pil_image.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    return f"data:image/png;base64,{img_str}"
 
-def get_gemini_response(input, image, prompt):
-    response = model.generate_content([input, image[0], prompt])
-    return response.text
-
-def input_image_details(uploaded_file):
-    if uploaded_file is not None:
-        bytes_data = uploaded_file.getvalue()
-        image_parts = [
-            {
-                "mime_type": uploaded_file.type, # get the mime type of uploaded file
-                "data": bytes_data
-            }
+def get_gemini_response(prompt_text, image, user_input):
+    # Convert PIL Image to base64 data URL
+    image_url = pil_to_base64(image)
+    # Combine the prompt, image, and user input into a single message
+    message = HumanMessage(
+        content=[
+            {"type": "text", "text": prompt_text},
+            {"type": "text", "text": user_input},
+            {"type": "image_url", "image_url": {"url": image_url}},
         ]
-        return image_parts
-    else:
-        return FileNotFoundError("No file uploaded")
+    )
+    response = model.invoke([message])
+    return response.content
 
 st.set_page_config(page_title="MultiLanguage Invoice Extractor")
 st.header("MultiLanguage Invoice Extractor")
@@ -42,9 +46,8 @@ You are an expert in understanding invoices.
 We will upload an image as invoices and you will have to answer any questions based on the uploaded invoice image.
 """
 
-if submit:
-    image_data = input_image_details(uploaded_file)
-    response = get_gemini_response(input_prompt, image_data, input)
+if submit and image != "":
+    response = get_gemini_response(input_prompt, image, input)
     st.subheader("The response is")
     st.write(response)
     
