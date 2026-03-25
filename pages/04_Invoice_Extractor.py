@@ -1,11 +1,16 @@
 from dotenv import load_dotenv
 load_dotenv()
+
 import streamlit as st
 from PIL import Image
 import base64
 from io import BytesIO
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
+
+st.set_page_config(page_title="Invoice Extractor", page_icon="🧾")
+st.header("🧾 MultiLanguage Invoice Extractor")
+st.write("Upload an invoice image and extract information from it.")
 
 model = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
@@ -30,24 +35,29 @@ def get_gemini_response(prompt_text, image, user_input):
     response = model.invoke([message])
     return response.content
 
-st.set_page_config(page_title="MultiLanguage Invoice Extractor")
-st.header("MultiLanguage Invoice Extractor")
-input = st.text_input("Input Prompt: ", key="input")
+input_prompt = """
+You are an expert in understanding invoices. 
+We will upload an image as invoices and you will have to answer any questions based on the uploaded invoice image.
+Be detailed and provide structured information if possible.
+"""
+
+# Upload section
+st.subheader("Upload Invoice")
 uploaded_file = st.file_uploader("Choose an image of the invoice...", type=["jpg", "jpeg", "png"])
-image = ""
+image = None
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption="Uploaded Invoice", use_column_width=True)
 
+# Question section
+st.subheader("Ask Questions")
+input_text = st.text_input("Input Prompt: ", key="input")
 submit = st.button("Tell me about the invoice")
 
-input_prompt = """
-You are an expert in understanding invoices. 
-We will upload an image as invoices and you will have to answer any questions based on the uploaded invoice image.
-"""
-
-if submit and image != "":
-    response = get_gemini_response(input_prompt, image, input)
-    st.subheader("The response is")
+if submit and image is not None:
+    with st.spinner("Analyzing invoice..."):
+        response = get_gemini_response(input_prompt, image, input_text)
+    st.subheader("Response:")
     st.write(response)
-    
+elif submit and image is None:
+    st.warning("Please upload an invoice image first.")

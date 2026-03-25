@@ -16,8 +16,8 @@ A multimodal application utilizing Gemini's vision capabilities. Users can uploa
 ### 4. MultiLanguage Invoice Extractor (`invoiceExtractor.py`)
 An application built to extract and summarize information from invoices. Users can upload an image of an invoice and ask specific questions about it, using the Gemini model to analyze the document.
 
-### 5. Multi-PDF Chat (`multipdfChat.py`)
-A RAG (Retrieval Augmented Generation) application that allows users to upload multiple PDF documents and ask questions about them. The application uses FAISS vector store to index the document chunks and retrieve the most relevant sections to answer user queries.
+### 5. Multi-PDF Chat (`pages/05_Multi_PDF_Chat.py`)
+A RAG (Retrieval Augmented Generation) application that allows users to upload multiple PDF documents and ask questions about them. The application uses FAISS to create an in-memory vector index of document chunks and retrieves the most relevant sections to answer user queries.
 
 ## Prerequisites
 
@@ -35,28 +35,11 @@ Before running the applications, make sure you have Python 3.8 or above installe
    ```env
    GOOGLE_API_KEY="your_google_api_key_here"
    ```
-4. **Run the applications**:
-   You can run any of the applications natively using the Streamlit CLI. 
-   
-   To run the simple Q&A Demo:
+4. **Run the unified application**:
    ```bash
    streamlit run app.py
    ```
-
-   To run the Vision App:
-   ```bash
-   streamlit run vision.py
-   ```
-
-   To run the Chat App:
-   ```bash
-   streamlit run qachat.py
-   ```
-
-   To run the MultiLanguage Invoice Extractor:
-   ```bash
-   streamlit run invoiceExtractor.py
-   ```
+   This will launch the multi-page application. Use the sidebar to navigate between different applications.
 
 ## LangChain](https://python.langchain.com/) - Framework for building applications with LLMs.
 * [langchain-google-genai](https://pypi.org/project/langchain-google-genai/) - LangChain integration for Google Generative AI.
@@ -75,10 +58,26 @@ The application has been refactored to use **LangChain** as the core framework i
 
 ### Benefits of LangChain Integration:
 - **Consistency**: All files use the same abstraction layer for LLM interaction
-- **RAG Support**: Built-in support for retrieval-augmented generation (Multi-PDF Chat)
-- **Message Structure**: Proper message handling with `HumanMessage` and other message types
-- **Image Handling**: Base64 encoding for seamless image processing in vision tasks
-- **Vector Store Integration**: Easy integration with FAISS for semantic search
-* [Google Generative AI SDK](https://pypi.org/project/google-generativeai/) - For connecting to the Gemini LLM.
+* [Streamlit](https://streamlit.io/) - Front-end web framework for building internal tools.
+* [LangChain](https://python.langchain.com/) - Framework for building applications with LLMs.
+* [langchain-google-genai](https://pypi.org/project/langchain-google-genai/) - LangChain integration for Google Generative AI.
+* [langchain-community](https://pypi.org/project/langchain-community/) - Community integrations for LangChain (includes FAISS vector store integration).
+* [FAISS](https://github.com/facebookresearch/faiss) - Library for efficient similarity search and in-memory vector indexing.
+* [PyPDF2](https://pypi.org/project/PyPDF2/) - For parsing and extracting text from PDF documents.
 * [python-dotenv](https://pypi.org/project/python-dotenv/) - For managing environment variables securely.
-* [Pillow (PIL)](https://python-pillow.org/) - For handling image inputs in the Vision application.
+* [Pillow (PIL)](https://python-pillow.org/) - For handling image inputs in the Vision and Invoice Extractor applications.
+
+## Architecture Changes (v2.0)
+
+The application has been refactored into a **unified multi-page Streamlit application** with **LangChain** as the core framework:
+
+- **Previous**: Separate individual Streamlit apps with direct `google.generativeai` SDK usage
+- **Current**: Single unified app with multi-page navigation, using LangChain's `ChatGoogleGenerativeAI` wrapper
+
+### Key Improvements:
+- **Unified Interface**: All applications accessible from a single sidebar menu
+- **LangChain Integration**: Consistent abstraction layer for LLM interaction across all pages
+- **RAG Support**: Built-in retrieval-augmented generation for Multi-PDF Chat
+- **Message Structure**: Proper message handling with `HumanMessage` for structured communication
+- **Image Handling**: Base64 encoding for seamless image processing in vision tasks
+- **Vector Indexing**: In-memory vector indexing with FAISS for semantic search and retrieval
