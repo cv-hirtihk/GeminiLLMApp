@@ -16,9 +16,30 @@ from langchain_core.output_parsers import StrOutputParser
 st.set_page_config(page_title="Multi-PDF Chat", page_icon="📄")
 st.header("📄 Chat with Multiple PDFs using Gemini")
 
+# Check if API key is available
+if not os.environ.get("GOOGLE_API_KEY"):
+    st.warning(
+        "🔑 **Please configure your Google Gemini API Key first!**\n\n"
+        "Go to the main page and enter your API key in the sidebar configuration section.\n\n"
+        "Get your API key from [Google AI Studio](https://aistudio.google.com/app/apikey)"
+    )
+    st.stop()
+
+# Check if a model is selected
+if not st.session_state.get('selected_model'):
+    st.error(
+        "❌ **No model selected!**\n\n"
+        "Please go to the main page and select a model from the sidebar dropdown.\n\n"
+        "Make sure your API key is valid and you have access to available models."
+    )
+    st.stop()
+
+# Get the selected model from session state
+model_name = st.session_state.get('selected_model')
+
 FAISS_INDEX_PATH = "faiss_index"
 EMBEDDING_MODEL  = "gemini-embedding-001"
-LLM_MODEL        = "gemini-2.5-flash"
+LLM_MODEL        = model_name
 
 def get_pdf_text(pdf_docs: list) -> str:
     text = ""
