@@ -41,7 +41,7 @@ Before running the applications, make sure you have Python 3.8 or above installe
    ```
    This will launch the multi-page application. Use the sidebar to navigate between different applications.
 
-## LangChain](https://python.langchain.com/) - Framework for building applications with LLMs.
+## [LangChain](https://python.langchain.com/) - Framework for building applications with LLMs.
 * [langchain-google-genai](https://pypi.org/project/langchain-google-genai/) - LangChain integration for Google Generative AI.
 * [langchain-community](https://pypi.org/project/langchain-community/) - Community integrations for LangChain (includes FAISS vector store).
 * [FAISS](https://github.com/facebookresearch/faiss) - Vector database for semantic search and retrieval.
